@@ -1,0 +1,27 @@
+.data
+A: .word 1,3,2,6,-15,7,-3,5,13,-2
+
+.text
+	li $s0, 0	# $s0 = i = 0
+	li $s1, 10	# n = 10
+	li $s2, 0	# initiate i = 0
+	la $s3, A	#load address of A into $s3
+	li $s4, 0
+	
+start: 	beq $s0, $s1, print
+	add $t0, $s0, $s0
+	add $t0, $t0, $t0
+	add $t0, $t0, $s3
+	lw  $t0, 0($t0)
+	abs $t0, $t0
+	blt $s4, $t0, max
+	addi $s0, $s0, 1
+	j start
+	
+max:	add $s4, $zero, $t0
+	addi $s0, $s0, 1
+	j start
+print:
+	li  $v0, 1
+	move $a0, $s4
+	syscall

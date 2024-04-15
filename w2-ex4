@@ -1,0 +1,13 @@
+#Laboratory Exercise 2, Assignment 4
+.text
+	addi $s0, $zero, 5
+	addi $s1, $zero, -1
+	
+	#X+2Y
+	
+	add $s3, $s1, $s1
+	add $s3, $s3, $s0
+	
+	li $v0, 1
+	move $a0, $s3
+	syscall

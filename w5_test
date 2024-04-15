@@ -1,0 +1,11 @@
+.data
+
+Message: .asciiz "Hello World"
+String: .space 100
+
+
+.text
+li $v0, 4
+la $a0, Message
+
+syscall

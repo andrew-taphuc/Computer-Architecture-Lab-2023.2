@@ -1,0 +1,19 @@
+.text
+
+li $s0, -1
+li $s1, 3
+add $s4, $s0, $s1
+start:
+slt $s3, $zero, $s4
+bne $s3, $zero, else
+li $v0, 1
+li $a0, 0
+syscall
+j quit
+
+else:
+li $v0, 1
+li $a0, 1
+syscall
+
+quit:

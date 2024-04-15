@@ -1,0 +1,74 @@
+ .data
+	A: .word 3,6,10,2,9,7,5,4,8,1
+	Aend: .word
+.text
+	la $a0, A			# $a0 lưu địa chỉ A[0]
+	la $a1, Aend			
+	add $a2, $a0, 4			# $a2 lưu địa chỉ A[1]
+	la $a3, Aend			
+	add $a1, $a1, -4		# $a1 lưu địa chỉ A[n-1]
+		j sort
+after_sort:
+	li $v0, 10 #exit
+ 	syscall
+end_main:
+sort:
+	li $s0, 1			
+					
+loop:	li $s1, 0
+	add $t0, $s0, $s0		
+	add $t0, $t0, $t0		
+	add $t0, $a0, $t0		
+	addi $t2, $t0, -4		
+	move $t5, $t0			     
+loop1:
+	lw $t1, 0($t0)			# luu gtri A[i]
+	lw $t3, 0($t2)			# luu gtri A[j]
+	slt $t4, $t1, $t3		# check A[j] < A[i]		
+	beq $t4, $zero, cont_sub	# 
+	move $t5, $t2 			# A[j] > A[j] => insert into $s2
+	li $s1, 1			# check = 1
+		
+cont_sub:				# j--
+	beq $t2, $a0, chen		# if j-- A[0] -> insert
+	addi $t2, $t2, -4		# j--
+	j loop1
+	
+chen:
+	beq $s1, 0, print		# check A[i] in position => if $s1 = 0 => print
+loop_chen:
+	addi $t0, $t0, -4		# A[j]
+	lw $s2, 0($t0)			# save A[j] into A[i]
+	sw $s2, 4($t0)
+	bne $t0, $t5, loop_chen		# if A[j] wrong position
+	sw $t1, 0($t5)			#  
+
+print: 	li $s4, 0
+print_char:
+ 	la $a0, A	    
+ 	add $s5, $s4, $s4
+ 	add $s5, $s5, $s5
+ 	add $s5, $a0, $s5
+ 	lw $s6, 0($s5)
+ 	beq $s5, $a3, in_xuong_dong	
+ 	li $v0, 1
+ 	move $a0, $s6
+ 	syscall
+ 	addi $s7, $a3, -4
+ 	beq $s5, $s7, skip
+ 	li $v0, 11
+ 	li $a0, ' '
+ 	syscall
+ 	skip:
+ 	addi $s4, $s4, 1
+ 	j print_char
+ 	in_xuong_dong:
+ 	li $v0, 11		#in xuống dòng
+ 	li $a0, '\n'
+ 	syscall
+ 	la $a0, A
+
+	beq $a1, $a2, after_sort
+	addi $s0, $s0, 1
+	addi $a2, $a2, 4
+	j loop

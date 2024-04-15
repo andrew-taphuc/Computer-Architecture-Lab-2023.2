@@ -1,0 +1,16 @@
+.text
+addi $s1, $zero, 0x8fffffff
+addi $s2, $zero, 0x9fffffff
+start:
+	li $t0,0		# load gia tri
+	addu $s3,$s1,$s2	# tinh tong 2 so
+	xor $t1,$s1,$s2		#kiem tra cung dau
+	
+	bltz $t1, exit		#neu cung dau -> thoat chuong trinh
+	xor $t2, $s1, $s3	#kiem tra so hang va tong co cung dau khong
+	bltz $t2, overflow	#neu khong cung dau -> overflow
+	j exit			#neu cung dau -> thoat chuong trinh
+	
+overflow:
+	li $t0,1
+exit:

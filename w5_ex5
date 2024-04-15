@@ -1,0 +1,64 @@
+.data
+x: .space 21
+y: .space 21
+
+Message1: .asciiz "Nhap ki tu thu "
+Message2: .asciiz " : "
+Message3: .asciiz "\n"
+
+.text
+		add  	$s0,$zero,$zero		# Set i = $s0 = 0
+		addi 	$s2, $zero, 20
+		la	$s1, x
+		addi 	$s3, $zero, 10
+		
+	
+get_string: 	add  	$t0,$s0,$s1		# Address of x[i] = x[0] + i
+
+		li  	$v0, 4			# Print message1
+		la 	$a0, Message1
+		syscall
+		
+		li 	$v0, 1			# Print number of char
+		addi	$s5, $s0, 1
+		move	$a0, $s5
+		syscall
+
+		li  	$v0, 4			# Print message2
+		la 	$a0, Message2
+		syscall
+		
+		li 	$v0, 12			# Read char
+		syscall
+		
+		move 	$t1, $v0		# Store char into $t1
+		li 	$s3, 10
+		
+		beq	$s3, $t1, end_read	# Check if char is newline
+		
+		li  	$v0, 4			# Newline
+		la 	$a0, Message3
+		syscall
+		
+		sb 	$t1, 0($t0)		# Store char into x
+		addi	$s0, $s0, 1		# i++
+		
+		beq 	$s0, $s2, end_read	# If i == 20, quit read
+		
+		j get_string
+		
+end_read:	
+		sub 	$s0, $s0, 1
+		bltz	$s0, quit
+		
+		add  	$t0,$s0,$s1		# Address of x[i] = x[0] + i
+		
+		lb 	$a0, ($t0)
+		li 	$v0, 11
+		syscall
+		
+		j end_read
+quit:	
+		li $v0, 10
+    		syscall
+		

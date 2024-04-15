@@ -1,0 +1,11 @@
+.text
+start: 
+	li $s1, -156
+	slt $t0, $zero, $s1
+	beq $t0, $zero, negative
+	add $s0, $zero, $s1
+	j quit
+negative:
+	sub $s0, $zero, $s1
+quit:
+

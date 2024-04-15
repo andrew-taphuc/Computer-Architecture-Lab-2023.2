@@ -1,0 +1,11 @@
+.text
+li $s1, 10 	# So can nhan
+li $s2, 16	# luy thua 2 can nhan
+li $t0, 1	# Bien kiem tra
+
+loop:
+	sll $s1, $s1, 1		# Nhan $s1 voi 2 bang cach dich trai 1 bit
+	sll $t0, $t0, 1		# Nhan bien kiem tra voi 2
+	beq $t0, $s2, exit	# Neu bien kiem tra = luy thua 2 can nhan -> exit
+	j loop
+exit:
