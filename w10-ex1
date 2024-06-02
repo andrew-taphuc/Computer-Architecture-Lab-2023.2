@@ -1,0 +1,42 @@
+
+.eqv SEVENSEG_LEFT 0xFFFF0011 	# Dia chi cua den led 7 doan trai.
+
+.eqv SEVENSEG_RIGHT 0xFFFF0010 	# Dia chi cua den led 7 doan phai
+.text
+
+
+#11011101
+disp:
+	li $a0, 0x3f		# set number 0 for segments
+	jal SHOW_7SEG_LEFT 		# show
+	nop
+	li $a0, 0xfd			# set number 6 for segments
+
+	jal SHOW_7SEG_RIGHT 		# show 
+	nop
+exit: 	
+
+	li $v0, 10
+	syscall
+
+
+end_disp:
+
+SHOW_7SEG_LEFT: 
+
+
+	li $t0, SEVENSEG_LEFT 	# assign port's address
+	sb $a0, 0($t0) 		# assign new value 
+	nop
+	jr $ra
+	nop
+
+
+SHOW_7SEG_RIGHT: 
+
+
+	li $t0, SEVENSEG_RIGHT 	# assign port's address
+	sb $a0, 0($t0) 		# assign new value
+	nop
+	jr $ra 
+	nop
