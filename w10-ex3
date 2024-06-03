@@ -1,0 +1,69 @@
+.eqv SEVENSEG_LEFT 0xFFFF0011 	# Dia chi cua den led 7 doan trai.
+.eqv SEVENSEG_RIGHT 0xFFFF0010 	# Dia chi cua den led 7 doan phai
+
+.data
+A: .word 0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F  # Patterns for digits 0-9
+msg_1: .asciiz "Nhap 01 ki tu: "
+
+.text
+
+main: 
+	li $v0, 4
+	la $a0, msg_1
+	syscall
+	
+	li $v0, 12
+	syscall
+	move $t0, $v0
+	
+	li $t1, 10		# Set 10 to divide
+	div $t0, $t1		# Divide with remainder
+	mfhi $t2		# Store remainder in $t2
+	sub $t0, $t0, $t2
+	div $t0, $t1
+	mflo $t0
+	div $t0, $t1
+	mfhi $t3
+		
+disp:
+	sll $t2, $t2, 2  # Shift left by 2 to multiply by 4 (offset for each digit pattern)
+  	la $t5, A  # Load address of digit_patterns table
+  	add $t5, $t5, $t2  # Add offset to get address of the pattern for the digit
+  	lw $a0, ($t5)
+  	
+	jal SHOW_7SEG_RIGHT 		# show
+	nop
+	
+	sll $t3, $t3, 2  # Shift left by 2 to multiply by 4 (offset for each digit pattern)
+  	la $t5, A  # Load address of digit_patterns table
+  	add $t5, $t5, $t3  # Add offset to get address of the pattern for the digit	
+  	lw $a0, ($t5)
+  	
+	jal SHOW_7SEG_LEFT 		# show 
+	nop
+exit: 	
+
+	li $v0, 10
+	syscall
+
+
+end_disp:
+
+SHOW_7SEG_LEFT: 
+
+
+	li $t0, SEVENSEG_LEFT 	# assign port's address
+	sb $a0, 0($t0) 		# assign new value 
+	nop
+	jr $ra
+	nop
+
+
+SHOW_7SEG_RIGHT: 
+
+
+	li $t0, SEVENSEG_RIGHT 	# assign port's address
+	sb $a0, 0($t0) 		# assign new value
+	nop
+	jr $ra 
+	nop
